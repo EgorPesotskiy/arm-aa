@@ -7,6 +7,12 @@
 
 - `arm_core.py` — М1 «Авторизация» и М2 «Учёт парка автомобилей».
 
+## Требования
+
+- Python 3.10 и выше;
+- зависимости из `requirements.txt` (pytest).
+
 ## Запуск тестов
 
+    pip install -r requirements.txt
     python -m pytest -v
