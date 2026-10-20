@@ -2,7 +2,8 @@
 """Модульные тесты модулей М1 и М2 (позитивные — уровень MAT, вместе с негативными — AT)."""
 import pytest
 
-from arm_core import AccountLocked, AuthService, change_status, validate_vin
+from arm_core import (AccountLocked, AuthService, Car, CarRegistry, change_status,
+                      validate_vin)
 
 
 # ---------- М2: проверка VIN ----------
@@ -40,6 +41,36 @@ def test_status_sold_is_final():
 def test_status_unknown():
     with pytest.raises(ValueError):
         change_status("на складе", "угнан")
+
+
+# ---------- М2: реестр автомобилей ----------
+@pytest.fixture
+def registry():
+    reg = CarRegistry()
+    reg.add(Car("XTA21099071234567", "Lada Vesta", 1_450_000))
+    return reg
+
+
+def test_registry_find_case_insensitive(registry):
+    assert registry.find(" xta21099071234567 ").model == "Lada Vesta"
+
+
+def test_registry_duplicate_vin(registry):
+    with pytest.raises(ValueError):
+        registry.add(Car("XTA21099071234567", "Lada Granta", 900_000))
+
+
+def test_registry_bad_price(registry):
+    with pytest.raises(ValueError):
+        registry.add(Car("WVWZZZ1KZAW123456", "VW Polo", 0))
+
+
+def test_car_status_history(registry):
+    car = registry.find("XTA21099071234567")
+    car.set_status("на складе")
+    car.set_status("в резерве")
+    assert car.history == [("в пути", "на складе"), ("на складе", "в резерве")]
+    assert registry.by_status("в резерве") == [car]
 
 
 # ---------- М1: авторизация ----------
