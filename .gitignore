@@ -1,0 +1,20 @@
+# Байт-код и кэши Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Виртуальное окружение
+venv/
+.venv/
+
+# Логи и артефакты сборки
+*.log
+build/
+dist/
+
+# Папки IDE
+.idea/
+.vscode/
+
+# Личные заметки разработчика
+my_notes.txt
